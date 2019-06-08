@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 import { todoStorage } from "../helpers/storage";
 
 import TodoList from "../components/TodoList";
@@ -26,11 +27,12 @@ export default {
   },
   data() {
     return {
-      todos: todoStorage.fetch(),
       visibility: "all"
     };
   },
-
+  mounted() {
+    this.fetchTodos();
+  },
   watch: {
     todos: {
       handler(todos) {
@@ -39,7 +41,11 @@ export default {
       deep: true
     }
   },
+  computed: {
+    ...mapState("todo", ["todos"])
+  },
   methods: {
+    ...mapActions("todo", ["fetchTodos"]),
     addTodo(value) {
       if (!value) return;
       this.todos.push({
